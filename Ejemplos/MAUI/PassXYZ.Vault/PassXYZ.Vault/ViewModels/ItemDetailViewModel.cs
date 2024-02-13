@@ -1,8 +1,8 @@
-﻿using PassXYZ.Vault.Models;
-using System;
+﻿using KeePassLib;
+using KPCLib;
+using PassXYZLib;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Threading.Tasks;
-using Microsoft.Maui.Controls;
 
 namespace PassXYZ.Vault.ViewModels
 {
@@ -10,15 +10,9 @@ namespace PassXYZ.Vault.ViewModels
     public class ItemDetailViewModel : BaseViewModel
     {
         private string itemId;
-        private string text;
         private string description;
         public string Id { get; set; }
-
-        public string Text
-        {
-            get => text;
-            set => SetProperty(ref text, value);
-        }
+        public ObservableCollection<Field> Fields { get; set; }
 
         public string Description
         {
@@ -39,14 +33,31 @@ namespace PassXYZ.Vault.ViewModels
             }
         }
 
+        public ItemDetailViewModel()
+        {
+            Fields = new ObservableCollection<Field>();
+        }
+
         public async void LoadItemId(string itemId)
         {
             try
             {
                 var item = await DataStore.GetItemAsync(itemId);
                 Id = item.Id;
-                Text = item.Text;
+                Title = item.Name;
                 Description = item.Description;
+
+                if (!item.IsGroup)
+                {
+                    PwEntry dataEntry = (PwEntry)item;
+                    Fields.Clear();
+                    List<Field> fields = dataEntry.GetFields(GetImage: FieldIcons.GetImage);
+                    foreach (Field field in fields)
+                    {
+                        Fields.Add(field);
+                    }
+                    Debug.WriteLine($"ItemDetailViewModel: Name={dataEntry.Name}, IsBusy={IsBusy}.");
+                }
             }
             catch (Exception)
             {

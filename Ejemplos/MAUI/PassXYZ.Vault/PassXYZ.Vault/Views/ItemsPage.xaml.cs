@@ -1,7 +1,6 @@
-﻿using System.Diagnostics;
-using PassXYZ.Vault.Models;
+﻿using KPCLib;
 using PassXYZ.Vault.ViewModels;
-using PassXYZ.Vault.Views;
+using System.Diagnostics;
 
 namespace PassXYZ.Vault.Views
 {
@@ -23,7 +22,7 @@ namespace PassXYZ.Vault.Views
             _viewModel.OnAppearing();
         }
 
-        void OnItemSelected(object sender, SelectedItemChangedEventArgs args) 
+        void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
         {
             var item = args.SelectedItem as Item;
             if (item == null)

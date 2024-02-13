@@ -1,9 +1,5 @@
-﻿using PassXYZ.Vault.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Input;
-using Microsoft.Maui.Controls;
+﻿using KPCLib;
+using PassXYZLib;
 
 namespace PassXYZ.Vault.ViewModels
 {
@@ -16,8 +12,7 @@ namespace PassXYZ.Vault.ViewModels
         {
             SaveCommand = new Command(OnSave, ValidateSave);
             CancelCommand = new Command(OnCancel);
-            this.PropertyChanged +=
-                (_, __) => SaveCommand.ChangeCanExecute();
+            this.PropertyChanged += (_, __) => SaveCommand.ChangeCanExecute();
         }
 
         private bool ValidateSave()
@@ -49,11 +44,10 @@ namespace PassXYZ.Vault.ViewModels
 
         private async void OnSave()
         {
-            Item newItem = new Item()
+            Item newItem = new PxEntry()
             {
-                Id = Guid.NewGuid().ToString(),
-                Text = Text,
-                Description = Description
+                Name = Text,
+                Notes = Description
             };
 
             await DataStore.AddItemAsync(newItem);

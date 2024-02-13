@@ -1,10 +1,11 @@
-﻿using PassXYZ.Vault.Models;
+﻿using KPCLib;
 using PassXYZ.Vault.Views;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 
 namespace PassXYZ.Vault.ViewModels
 {
+    [QueryProperty(nameof(ItemId), nameof(ItemId))]
     public class ItemsViewModel : BaseViewModel
     {
         private Item? _selectedItem = default;
@@ -13,6 +14,37 @@ namespace PassXYZ.Vault.ViewModels
         public Command LoadItemsCommand { get; }
         public Command AddItemCommand { get; }
         public Command<Item> ItemTapped { get; }
+
+        public string ItemId
+        {
+            get
+            {
+                return _selectedItem == null ? string.Empty : _selectedItem.Id;
+            }
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    var item = DataStore.GetItem(value, true);
+                    if (item != null)
+                    {
+                        _selectedItem = DataStore.CurrentGroup = item;
+                        Debug.WriteLine($"ItemsViewModel: ItemId={DataStore.CurrentGroup!.Name}, {DataStore.CurrentGroup!.Description}");
+                    }
+                    else
+                    {
+                        Debug.WriteLine($"ItemsViewModel: ItemId cannot be found.");
+                        throw new ArgumentNullException("ItemId");
+                    }
+                }
+                else
+                {
+                    _selectedItem = null;
+                    DataStore.CurrentGroup = DataStore.RootGroup;
+                }
+                ExecuteLoadItemsCommand();
+            }
+        }
 
         public ItemsViewModel()
         {
@@ -25,18 +57,38 @@ namespace PassXYZ.Vault.ViewModels
             AddItemCommand = new Command(OnAddItem);
         }
 
+        ~ItemsViewModel()
+        {
+            Debug.WriteLine($"~ItemDetailViewModel: Title={Title} destroyed.");
+        }
+
         public async Task ExecuteLoadItemsCommand()
         {
             IsBusy = true;
 
             try
             {
-                Items.Clear();
-                var items = await DataStore.GetItemsAsync(true);
-                foreach (var item in items)
+                if (_selectedItem == null)
                 {
-                    Items.Add(item);
-                    Debug.WriteLine($"ItemsViewModel: {item.Text}, {item.Description}");
+                    // This is the case for root group.
+                    DataStore.CurrentGroup = DataStore.RootGroup;
+                    Debug.WriteLine($"ItemsViewModel: loading {DataStore.CurrentGroup.Name}");
+                }
+
+                if (DataStore.RootGroup != null)
+                {
+                    Title = DataStore.CurrentGroup.Name;
+                    Items.Clear();
+                    var items = await DataStore.GetItemsAsync(true);
+                    Debug.WriteLine($"ItemsViewModel: loading from {DataStore.CurrentGroup.Name}");
+                    foreach (var item in items)
+                    {
+                        Items.Add(item);
+                    }
+                }
+                else
+                {
+                    throw new ArgumentNullException("RootGroup is null");
                 }
             }
             catch (Exception ex)
@@ -52,8 +104,11 @@ namespace PassXYZ.Vault.ViewModels
         async public void OnAppearing()
         {
             IsBusy = true;
-            SelectedItem = null;
-            await ExecuteLoadItemsCommand();
+            if (_selectedItem == null)
+            {
+                // Loading from RootPage
+                await ExecuteLoadItemsCommand();
+            }
         }
 
         public Item? SelectedItem
@@ -62,8 +117,9 @@ namespace PassXYZ.Vault.ViewModels
             set
             {
                 SetProperty(ref _selectedItem, value);
-                if(value != null) 
+                if (value != null)
                 {
+                    Debug.WriteLine($"ItemsViewModel: SelectedItem is {_selectedItem.Name}");
                     OnItemSelected(value);
                 }
             }
@@ -79,8 +135,16 @@ namespace PassXYZ.Vault.ViewModels
             if (item == null)
                 return;
 
-            // This will push the ItemDetailPage onto the navigation stack
-            await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.ItemId)}={item.Id}");
+            if (item.IsGroup)
+            {
+                // This will push the ItemsPage onto the navigation stack
+                await Shell.Current.GoToAsync($"{nameof(ItemsPage)}?{nameof(ItemsViewModel.ItemId)}={item.Id}");
+            }
+            else
+            {
+                // This will push the ItemDetailPage onto the navigation stack
+                await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.ItemId)}={item.Id}");
+            }
         }
     }
 }

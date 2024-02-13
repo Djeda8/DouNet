@@ -1,10 +1,7 @@
-﻿using PassXYZ.Vault.Models;
+﻿using KPCLib;
 using PassXYZ.Vault.Services;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Microsoft.Maui.Controls;
 
 namespace PassXYZ.Vault.ViewModels
 {
@@ -26,9 +23,7 @@ namespace PassXYZ.Vault.ViewModels
             set { SetProperty(ref title, value); }
         }
 
-        protected bool SetProperty<T>(ref T backingStore, T value,
-            [CallerMemberName] string propertyName = "",
-            Action onChanged = null)
+        protected bool SetProperty<T>(ref T backingStore, T value, [CallerMemberName] string propertyName = "", Action onChanged = null)
         {
             if (EqualityComparer<T>.Default.Equals(backingStore, value))
                 return false;
