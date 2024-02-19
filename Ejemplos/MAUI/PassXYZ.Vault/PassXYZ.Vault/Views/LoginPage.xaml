@@ -50,7 +50,7 @@
                                    HorizontalOptions="Fill"
                                    Grid.Row="0" Grid.Column="1" />
                     <ImageButton x:Name="switchUsersButton" Grid.Row="0" Grid.Column="2" 
-                                    VerticalOptions="End" IsVisible="False"
+                                    VerticalOptions="End" IsVisible="True"
                                     Clicked="OnSwitchUsersClicked" BackgroundColor="White" BorderColor="White"
                                     HeightRequest="32"  WidthRequest="32" BorderWidth="0">
                         <ImageButton.Source>
