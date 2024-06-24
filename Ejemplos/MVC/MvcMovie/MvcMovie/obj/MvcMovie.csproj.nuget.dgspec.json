@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\DouNet\\Ejemplos\\MVC\\MvcMovie\\MvcMovie\\MvcMovie.csproj": {}
+    "C:\\DouNet2\\Ejemplos\\MVC\\MvcMovie\\MvcMovie\\MvcMovie.csproj": {}
   },
   "projects": {
-    "C:\\DouNet\\Ejemplos\\MVC\\MvcMovie\\MvcMovie\\MvcMovie.csproj": {
+    "C:\\DouNet2\\Ejemplos\\MVC\\MvcMovie\\MvcMovie\\MvcMovie.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\DouNet\\Ejemplos\\MVC\\MvcMovie\\MvcMovie\\MvcMovie.csproj",
+        "projectUniqueName": "C:\\DouNet2\\Ejemplos\\MVC\\MvcMovie\\MvcMovie\\MvcMovie.csproj",
         "projectName": "MvcMovie",
-        "projectPath": "C:\\DouNet\\Ejemplos\\MVC\\MvcMovie\\MvcMovie\\MvcMovie.csproj",
+        "projectPath": "C:\\DouNet2\\Ejemplos\\MVC\\MvcMovie\\MvcMovie\\MvcMovie.csproj",
         "packagesPath": "C:\\Users\\Daniel\\.nuget\\packages\\",
-        "outputPath": "C:\\DouNet\\Ejemplos\\MVC\\MvcMovie\\MvcMovie\\obj\\",
+        "outputPath": "C:\\DouNet2\\Ejemplos\\MVC\\MvcMovie\\MvcMovie\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
@@ -84,7 +84,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.106/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
